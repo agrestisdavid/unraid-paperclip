@@ -1,6 +1,6 @@
 # Third-party notices
 
-`assets/paperclip.svg` is copied without modification from `ui/public/favicon.svg` in [paperclipai/paperclip](https://github.com/paperclipai/paperclip) at revision `d554c4789ed3930f8a53ac9fdf6503b3187097da`.
+`assets/paperclip.png` is copied without modification from `ui/public/apple-touch-icon.png`, and `assets/paperclip.svg` from `ui/public/favicon.svg`, in [paperclipai/paperclip](https://github.com/paperclipai/paperclip) at revision `d554c4789ed3930f8a53ac9fdf6503b3187097da`.
 
 Copyright (c) 2025 Paperclip AI. Used under the MIT License; the full upstream license is included in `LICENSES/Paperclip-MIT.txt`.
 

@@ -13,7 +13,7 @@
   <Category>AI: Productivity: Tools:Utilities</Category>
   <WebUI>http://[IP]:[PORT:3100]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/agrestisdavid/unraid-paperclip/main/templates/paperclip.xml</TemplateURL>
-  <Icon>https://raw.githubusercontent.com/agrestisdavid/unraid-paperclip/main/assets/paperclip.svg</Icon>
+  <Icon>https://raw.githubusercontent.com/agrestisdavid/unraid-paperclip/main/assets/paperclip.png</Icon>
   <ExtraParams>--pids-limit=2048 --stop-timeout=60</ExtraParams>
   <ExtraSearchTerms>agents orchestration hermes tasks automation</ExtraSearchTerms>
   <License>https://github.com/paperclipai/paperclip/blob/master/LICENSE</License>

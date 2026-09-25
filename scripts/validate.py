@@ -39,7 +39,7 @@ def validate():
             check(bool((app.findtext(tag) or "").strip()), f"Missing app field: {tag}")
         check(app.findtext("Repository") == "ghcr.io/paperclipai/paperclip:latest", "Unexpected upstream image.")
         check(app.findtext("TemplateURL") == RAW + "/templates/paperclip.xml", "TemplateURL must match the public file.")
-        check(app.findtext("Icon") == RAW + "/assets/paperclip.svg", "Icon URL must match the bundled asset.")
+        check(app.findtext("Icon") == RAW + "/assets/paperclip.png", "Icon URL must match the bundled asset.")
         check(app.findtext("Support") == REPO + "/issues", "Support URL must resolve to this repository.")
         check(app.findtext("Network") == "bridge", "Bridge networking is required.")
         check(app.findtext("Privileged") == "false", "Privileged mode must be disabled.")
@@ -74,7 +74,7 @@ def validate():
         check(profile.tag == "CommunityApplications", "Invalid CA profile root.")
         check(bool((profile.findtext("Profile") or "").strip()), "CA Profile must not be empty.")
         check(profile.findtext("WebPage") == REPO, "Wrong profile repository URL.")
-    for name in ("README.md", "LICENSE", "LICENSES/Paperclip-MIT.txt", "THIRD-PARTY-NOTICES.md", "assets/paperclip.svg", "docs/CA-SUBMISSION.md", "docs/VALIDATION.md"):
+    for name in ("README.md", "LICENSE", "LICENSES/Paperclip-MIT.txt", "THIRD-PARTY-NOTICES.md", "assets/paperclip.png", "docs/CA-SUBMISSION.md", "docs/VALIDATION.md"):
         check((ROOT / name).is_file(), f"Missing required repository file: {name}")
     if (ROOT / "LICENSE").is_file():
         license_text = (ROOT / "LICENSE").read_text(encoding="utf-8")
