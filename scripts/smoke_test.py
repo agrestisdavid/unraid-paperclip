@@ -2,6 +2,7 @@
 """Exercise the actual template using an isolated Linux Docker container and volume."""
 
 from datetime import datetime, timezone
+import http.client
 import http.cookiejar
 import json
 from pathlib import Path
@@ -18,6 +19,18 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "test-results/smoke.json"
+
+
+class LoopbackConnection(http.client.HTTPConnection):
+    """Route the reserved test hostname locally without changing system DNS."""
+
+    def connect(self):
+        self.sock = socket.create_connection(("127.0.0.1", self.port), self.timeout)
+
+
+class LoopbackHandler(urllib.request.HTTPHandler):
+    def http_open(self, req):
+        return self.do_open(LoopbackConnection, req)
 
 
 def docker(*args, timeout=120):
@@ -38,14 +51,16 @@ def main():
     with socket.socket() as s:
         s.bind(("127.0.0.1", 0))
         port = s.getsockname()[1]
-    base = f"http://127.0.0.1:{port}"
+    # Exercise a LAN-style origin: upstream rewrites localhost URL ports to
+    # its internal listen port, which is unsuitable for a remapped Docker port.
+    base = f"http://paperclip-smoke.test:{port}"
     environment = {c.get("Target"): (c.text or c.get("Default", "")) for c in app.findall("Config") if c.get("Type") == "Variable"}
     environment.update(PAPERCLIP_PUBLIC_URL=base, BETTER_AUTH_SECRET=secrets.token_hex(32), PAPERCLIP_TOOL_ACTION_SIGNING_SECRET=secrets.token_hex(32))
     password = secrets.token_urlsafe(32)
     email = "smoke-test@example.com"
     cookies = http.cookiejar.CookieJar()
-    client = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookies), urllib.request.ProxyHandler({}))
-    anonymous = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    client = urllib.request.build_opener(LoopbackHandler(), urllib.request.HTTPCookieProcessor(cookies), urllib.request.ProxyHandler({}))
+    anonymous = urllib.request.build_opener(LoopbackHandler(), urllib.request.ProxyHandler({}))
     report = {"startedAt": datetime.now(timezone.utc).isoformat(), "image": image, "checks": [], "success": False}
     volume_created = False
 
@@ -119,10 +134,12 @@ def main():
         check(status in (401, 403), "Anonymous access to company data is denied")
         ownership = docker("exec", name, "node", "-e", "const s=require('fs').statSync('/paperclip');console.log(s.uid+':'+s.gid)")
         check(ownership == environment["USER_UID"] + ":" + environment["USER_GID"], "Fresh persistent storage receives the configured UID/GID")
-        process_uid = docker("exec", name, "node", "-e", r"const fs=require('fs');for(const p of fs.readdirSync('/proc').filter(x=>/^\d+$/.test(x))){try{const a=fs.readFileSync('/proc/'+p+'/cmdline','utf8').split('\0');if(a.includes('server/dist/index.js')){const s=fs.readFileSync('/proc/'+p+'/status','utf8');console.log(s.match(/^Uid:\s+(\d+)/m)[1]);}}catch{}}")
+        process_uid = docker("exec", name, "node", "-e", r"const fs=require('fs');for(const p of fs.readdirSync('/proc').filter(x=>/^\d+$/.test(x))){try{const a=fs.readFileSync('/proc/'+p+'/cmdline','utf8').split('\0');if(a[0].split('/').pop()==='node' && a.includes('server/dist/index.js')){const s=fs.readFileSync('/proc/'+p+'/status','utf8');console.log(s.match(/^Uid:\s+(\d+)/m)[1]);}}catch{}}")
         check(process_uid.strip() == environment["USER_UID"], "Application process runs as the configured non-root user")
-        status, _ = request("/api/auth/sign-up/email", {"name": "Template Smoke Test", "email": email, "password": password})
-        check(status in (200, 201), "First account can sign up")
+        status, signup = request("/api/auth/sign-up/email", {"name": "Template Smoke Test", "email": email, "password": password})
+        if status not in (200, 201):
+            raise RuntimeError(f"Sign-up HTTP {status}: {signup}")
+        check(True, "First account can sign up")
         status, claim = request("/api/bootstrap/claim", {})
         check(status == 200 and isinstance(claim, dict) and claim.get("claimed") is True, "Private deployment supports browser first-admin claim")
         status, company = request("/api/companies", {"name": "Unraid template smoke test"})
