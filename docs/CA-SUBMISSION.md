@@ -15,7 +15,7 @@
 
 The [existing BitCryptic Paperclip listing](https://ca.unraid.net/apps/paperclip-1khajpx0l4tpep) was marked deprecated and unsupported as of September 20, 2026, when checked on September 25, 2026. It uses a separately maintained image and requires external PostgreSQL.
 
-This submission uses the upstream Paperclip AI image and its embedded database, with authenticated private-network setup and Unraid UID/GID defaults. Explain this distinction to reviewers. Acceptance, naming and treatment of the older listing remain decisions for the CA team. This is a fresh-install template, not an automatic migration from that older package.
+This submission uses the upstream Paperclip AI image and its embedded database, with authenticated private-network setup and the upstream runtime UID/GID defaults. Explain this distinction to reviewers. Acceptance, naming and treatment of the older listing remain decisions for the CA team. This is a fresh-install template, not an automatic migration from that older package.
 
 ## Before submission
 
@@ -45,7 +45,7 @@ This repository's validator catches common mistakes but is not the official CA v
 
 ## Suggested reviewer note
 
-> This community-maintained template installs the official Paperclip AI GHCR image with embedded PostgreSQL. It provides authenticated private-network setup, persistent Appdata, Unraid UID/GID defaults, an English setup guide and automated runtime checks. The older BitCryptic Paperclip listing is marked deprecated; this template uses the upstream-maintained image and a different database layout. We request review as a maintained upstream-image option. Support is provided through the repository's GitHub Issues.
+> This community-maintained template installs the official Paperclip AI GHCR image with embedded PostgreSQL. It provides authenticated private-network setup, persistent Appdata, the upstream runtime UID/GID defaults, an English setup guide and automated runtime checks. The older BitCryptic Paperclip listing is marked deprecated; this template uses the upstream-maintained image and a different database layout. We request review as a maintained upstream-image option. Support is provided through the repository's GitHub Issues.
 
 ## References
 

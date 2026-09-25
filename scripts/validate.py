@@ -60,7 +60,7 @@ def validate():
             if c is not None:
                 check(c.get("Mask") == "true" and c.get("Required") == "true", f"{key} must be required and masked.")
                 check(not (c.text or "").strip() and not c.get("Default"), f"Never publish a default {key}.")
-        for key, value in {"HOST": "0.0.0.0", "PORT": "3100", "USER_UID": "99", "USER_GID": "100", "PAPERCLIP_HOME": "/paperclip", "PAPERCLIP_DEPLOYMENT_MODE": "authenticated", "PAPERCLIP_DEPLOYMENT_EXPOSURE": "private"}.items():
+        for key, value in {"HOST": "0.0.0.0", "PORT": "3100", "USER_UID": "1000", "USER_GID": "1000", "PAPERCLIP_HOME": "/paperclip", "PAPERCLIP_DEPLOYMENT_MODE": "authenticated", "PAPERCLIP_DEPLOYMENT_EXPOSURE": "private"}.items():
             c = variables.get(key)
             check(c is not None and c.text == value, f"Unexpected {key} default.")
         public = variables.get("PAPERCLIP_PUBLIC_URL")

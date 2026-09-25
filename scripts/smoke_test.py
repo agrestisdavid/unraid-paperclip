@@ -118,7 +118,7 @@ def main():
         status, _ = request("/api/companies", authenticated=False)
         check(status in (401, 403), "Anonymous access to company data is denied")
         ownership = docker("exec", name, "node", "-e", "const s=require('fs').statSync('/paperclip');console.log(s.uid+':'+s.gid)")
-        check(ownership == environment["USER_UID"] + ":" + environment["USER_GID"], "Fresh persistent storage receives the configured Unraid UID/GID")
+        check(ownership == environment["USER_UID"] + ":" + environment["USER_GID"], "Fresh persistent storage receives the configured UID/GID")
         process_uid = docker("exec", name, "node", "-e", r"const fs=require('fs');for(const p of fs.readdirSync('/proc').filter(x=>/^\d+$/.test(x))){try{const a=fs.readFileSync('/proc/'+p+'/cmdline','utf8').split('\0');if(a.includes('server/dist/index.js')){const s=fs.readFileSync('/proc/'+p+'/status','utf8');console.log(s.match(/^Uid:\s+(\d+)/m)[1]);}}catch{}}")
         check(process_uid.strip() == environment["USER_UID"], "Application process runs as the configured non-root user")
         status, _ = request("/api/auth/sign-up/email", {"name": "Template Smoke Test", "email": email, "password": password})

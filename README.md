@@ -52,7 +52,7 @@ See the [Hermes Gateway documentation](https://docs.paperclip.ing/reference/adap
 
 ## Storage, backup and updates
 
-Everything under `/paperclip` is persisted through Appdata, including embedded PostgreSQL, uploads, workspaces and local encryption material. The application runs with `USER_UID=99` and `USER_GID=100`, matching Unraid's usual `nobody:users`. The image uses these variable names, not `PUID`/`PGID`.
+Everything under `/paperclip` is persisted through Appdata, including embedded PostgreSQL, uploads, workspaces and local encryption material. The application runs with the upstream defaults `USER_UID=1000` and `USER_GID=1000`. Keep these defaults: the tested upstream release cannot initialize embedded PostgreSQL after remapping to Unraid's usual UID 99, because it needs to create native-library symlinks within the image. The entrypoint assigns Appdata ownership to `1000:1000`; no privileged container is needed. The image uses `USER_UID`/`USER_GID`, not `PUID`/`PGID`.
 
 Before an upgrade:
 
@@ -67,7 +67,7 @@ Before an upgrade:
 
 - **Startup fails:** inspect the container log, confirm the two secrets and Public URL are set, and check Appdata permissions and free space. Initial database setup takes longer than later starts.
 - **Login redirects or origin errors:** check the browser URL against Public URL; update it when changing the host port or proxy address.
-- **Permission errors:** use `USER_UID`/`USER_GID`, and ensure the chosen Appdata path is writable. Do not add `--user` to bypass the upstream entrypoint's permission setup.
+- **Permission errors:** keep `USER_UID=1000` and `USER_GID=1000`, and ensure the chosen Appdata path is writable. Do not add `--user` to bypass the upstream entrypoint's permission setup.
 - **First administrator already claimed:** sign in using the account that claimed the installation. Do not delete Appdata to repair an account problem.
 - **Hermes connection fails:** test reachability from the container, confirm HTTPS and the API key, and make sure the correct profile API is running.
 
