@@ -29,3 +29,9 @@ An initial runtime test on Unraid 7.2.4 and GitHub's Linux runner exposed an ups
 The Unraid runtime check verified authenticated startup, dashboard HTML, rejection of anonymous company access, data ownership, the non-root application process, signup, first-admin claim, company creation, restart persistence, recreation persistence and fresh login. It used an isolated Docker volume and a loopback-bound host port with a simulated LAN hostname. All test containers and volumes were removed afterward; the original 42 running containers remained running.
 
 CI results are available under [Actions](https://github.com/agrestisdavid/unraid-paperclip/actions). A passing Docker smoke test must not be described as a completed Unraid Docker Manager UI or CA moderation test.
+
+## Native Unraid installation
+
+On September 25, 2026, the template was also installed persistently on Unraid 7.2.4 using Docker Manager's own `xmlToCommand` compiler. The saved user template, `dockerman` management label, WebUI link, appdata bind mount and native Autostart entry were verified. The authenticated WebUI was reachable from another LAN computer, and a clean restart and container recreation preserved the data directory and settings. First-account setup remains an interactive operator step.
+
+Docker Manager caches icons as PNG files, so the template now references the original upstream PNG asset. The cached file's PNG signature was verified. This integration check does not replace a visual browser check or a physical server/array reboot test.
