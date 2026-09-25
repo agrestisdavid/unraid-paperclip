@@ -19,11 +19,11 @@ This submission uses the upstream Paperclip AI image and its embedded database, 
 
 ## Before submission
 
-- [ ] Confirm the latest GitHub Actions validation and container smoke test are green.
+- [x] GitHub Actions validation and container smoke test passed; see the validation record.
 - [ ] Complete the Unraid acceptance test below and record the version/results in `docs/VALIDATION.md`.
-- [ ] Verify public raw TemplateURL and icon URLs are reachable without signing in.
+- [x] Public raw TemplateURL and icon URLs are reachable without signing in.
 - [ ] Confirm that GitHub Issues is the support channel you will maintain. A forum announcement draft is provided separately if you prefer forum support; update the XML links only after that thread exists.
-- [ ] Confirm the repository is public, active, has its root MIT LICENSE, and contains no credentials or private configuration.
+- [x] Repository is public and active, its MIT license is recognized by GitHub, and the committed files contain no credentials or private host configuration.
 
 ## Unraid acceptance test
 

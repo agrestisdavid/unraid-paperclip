@@ -20,9 +20,12 @@ An initial runtime test on Unraid 7.2.4 and GitHub's Linux runner exposed an ups
 ## Results
 
 - Local XML/repository validation: passed on September 25, 2026.
-- Linux Docker authentication and persistence smoke test: pending execution.
+- Unraid 7.2.4 / Docker 27.5.1 runtime smoke test: passed with 11 checks; see [the recorded result](validation/unraid-7.2.4-smoke.md).
+- GitHub-hosted Linux Docker authentication and persistence smoke test: passed with 11 checks on September 25, 2026 ([successful workflow run](https://github.com/agrestisdavid/unraid-paperclip/actions/runs/36178771145)).
 - Unraid Docker Manager install, WebUI, Autostart and backup restore: not yet tested.
 - CA portal Validate/Scan: not yet run.
 - CA submission: not submitted.
 
-CI results are available under [Actions](https://github.com/agrestisdavid/unraid-paperclip/actions). A passing Docker smoke test must not be described as a completed Unraid UI or CA moderation test.
+The Unraid runtime check verified authenticated startup, dashboard HTML, rejection of anonymous company access, data ownership, the non-root application process, signup, first-admin claim, company creation, restart persistence, recreation persistence and fresh login. It used an isolated Docker volume and a loopback-bound host port with a simulated LAN hostname. All test containers and volumes were removed afterward; the original 42 running containers remained running.
+
+CI results are available under [Actions](https://github.com/agrestisdavid/unraid-paperclip/actions). A passing Docker smoke test must not be described as a completed Unraid Docker Manager UI or CA moderation test.
