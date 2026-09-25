@@ -30,7 +30,7 @@ This downloads the template only. In **Docker → Add Container**, select **Pape
 
 Use local storage for Appdata, preferably an SSD pool. Do not point this template at the data directory of a different Paperclip image or an existing PostgreSQL container. The entrypoint updates ownership within Appdata; it must be a dedicated directory.
 
-Click **Apply**, wait for initialization, and open **WebUI**. Create an account and complete the first-administrator claim on the setup screen. Keep the installation on your trusted private network during initial setup. No model API key is needed to start the dashboard; configure credentials when adding agents.
+Click **Apply**, wait for initialization, and open **WebUI**. The link opens `/auth` directly. Select **Need an account? Create one**, create your account, and complete the first-administrator claim on the setup screen. Existing sessions are redirected into the application. Keep the installation on your trusted private network during initial setup. No model API key is needed to start the dashboard; configure credentials when adding agents.
 
 Enable **Autostart** for the container in the Unraid Docker tab after setup. Unraid then manages startup with the array. This template does not force a separate Docker restart policy. For crash recovery, configure your preferred Unraid monitoring/restart mechanism deliberately.
 
@@ -38,7 +38,7 @@ Enable **Autostart** for the container in the Unraid Docker tab after setup. Unr
 
 The template uses bridge networking and publishes only port `3100/tcp`. Embedded PostgreSQL is internal to the container. It does not mount the Docker socket or require privileged mode.
 
-`PAPERCLIP_PUBLIC_URL` must match the address you actually use, including a non-default host port. Unlike the WebUI field, environment variables do not expand Unraid's `[IP]` and `[PORT]` placeholders. Add optional aliases with **Additional hostnames**; the Public URL host is already included.
+`PAPERCLIP_PUBLIC_URL` must match the browser origin, including a non-default host port, for example `http://tower:3100`. Keep the `/auth` path in the WebUI link only. Unlike the WebUI field, environment variables do not expand Unraid's `[IP]` and `[PORT]` placeholders. Add optional aliases with **Additional hostnames**; the Public URL host is already included.
 
 For a private HTTPS reverse proxy, set Public URL to the HTTPS address and configure the proxy for WebSockets and long-lived event streams. The Unraid WebUI link defaults to the direct HTTP address; edit that field if you use only the proxy. The `private` setting is an application mode, not a firewall. Internet-facing deployments require the separate [upstream public deployment configuration](https://docs.paperclip.ing/reference/deploy/deployment-modes/), including an external database.
 
@@ -66,6 +66,7 @@ Before an upgrade:
 ## Troubleshooting
 
 - **Startup fails:** inspect the container log, confirm the two secrets and Public URL are set, and check Appdata permissions and free space. Initial database setup takes longer than later starts.
+- **WebUI stays on Loading:** open `/auth` directly, for example `http://tower:3100/auth`. In the tested upstream release, the root route waits for retries of settings requests rejected before login, delaying the setup screen. The template's WebUI link bypasses that initial route. For an existing installation, edit its WebUI field to `http://[IP]:[PORT:3100]/auth` in Advanced View and apply; downloading the updated public template does not change an existing container. Initial asset downloads may also take longer on a slow connection.
 - **Login redirects or origin errors:** check the browser URL against Public URL; update it when changing the host port or proxy address.
 - **Permission errors:** keep `USER_UID=1000` and `USER_GID=1000`, and ensure the chosen Appdata path is writable. Do not add `--user` to bypass the upstream entrypoint's permission setup.
 - **First administrator already claimed:** sign in using the account that claimed the installation. Do not delete Appdata to repair an account problem.

@@ -11,7 +11,7 @@
   <ReadMe>https://github.com/agrestisdavid/unraid-paperclip#readme</ReadMe>
   <Overview>Manage teams of AI agents, tasks, approvals, schedules and budgets with Paperclip. This community-maintained Unraid template runs the official upstream image with embedded PostgreSQL and persistent storage.&#13;&#13;Before starting, set Public URL to the actual browser address and generate two separate secrets using openssl rand -hex 32. Open the WebUI, create your account and claim the first administrator. No external database or model API key is required to start the dashboard. Configure agent credentials separately after setup.&#13;&#13;Intended for a trusted private network. Remote Hermes agents connect through the Hermes Gateway adapter. Enable Autostart in the Unraid Docker tab after completing setup. See the README for installation, backups and upgrades.</Overview>
   <Category>AI: Productivity: Tools:Utilities</Category>
-  <WebUI>http://[IP]:[PORT:3100]</WebUI>
+  <WebUI>http://[IP]:[PORT:3100]/auth</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/agrestisdavid/unraid-paperclip/main/templates/paperclip.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/agrestisdavid/unraid-paperclip/main/assets/paperclip.png</Icon>
   <ExtraParams>--pids-limit=2048 --stop-timeout=60</ExtraParams>

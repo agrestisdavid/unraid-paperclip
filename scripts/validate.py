@@ -69,7 +69,7 @@ def validate():
         check(len(ports) == 1 and ports[0].get("Target") == "3100" and ports[0].get("Mode") == "tcp", "Publish only the application TCP port.")
         paths = [c for c in configs if c.get("Type") == "Path"]
         check(len(paths) == 1 and paths[0].get("Target") == "/paperclip" and paths[0].text == "/mnt/user/appdata/paperclip", "Persist the complete Paperclip home only.")
-        check(app.findtext("WebUI") == "http://[IP]:[PORT:3100]", "WebUI must use the mapped application port.")
+        check(app.findtext("WebUI") == "http://[IP]:[PORT:3100]/auth", "WebUI must open the authentication page on the mapped application port.")
     if profile is not None:
         check(profile.tag == "CommunityApplications", "Invalid CA profile root.")
         check(bool((profile.findtext("Profile") or "").strip()), "CA Profile must not be empty.")
