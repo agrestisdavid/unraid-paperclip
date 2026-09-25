@@ -50,6 +50,18 @@ Use one Paperclip agent per Hermes role/profile and select the corresponding API
 
 See the [Hermes Gateway documentation](https://docs.paperclip.ing/reference/adapters/hermes-gateway/). This template does not copy Hermes profiles, persona files, Honcho memories or credentials into the container.
 
+## Connect a Codex subscription
+
+In Paperclip, start a Codex subscription connection and copy the sign-in command shown for that connection. Open a shell as the application user from the Unraid host terminal:
+
+```sh
+docker exec -it --user 1000:1000 Paperclip-Upstream bash
+```
+
+Paste Paperclip's command into that shell and complete the device login, then return to the same connection in Paperclip and click **Connect**. Preserve the command's generated `CODEX_HOME`: it identifies this specific sign-in attempt. If you already opened the container console from Docker Manager, run `gosu node bash` before pasting the command.
+
+Docker Manager's container console starts as root in this image. Running the login there as root creates private authentication files that the Paperclip application user cannot read. This can cause subscription verification to fail and `EACCES` errors when cancelling or restarting sign-in. Run the login as `1000:1000`; do not make token files world-readable or run the application as root. See the [official Codex authentication documentation](https://developers.openai.com/codex/auth) for device login and subscription authentication.
+
 ## Storage, backup and updates
 
 Everything under `/paperclip` is persisted through Appdata, including embedded PostgreSQL, uploads, workspaces and local encryption material. The application runs with the upstream defaults `USER_UID=1000` and `USER_GID=1000`. Keep these defaults: the tested upstream release cannot initialize embedded PostgreSQL after remapping to Unraid's usual UID 99, because it needs to create native-library symlinks within the image. The entrypoint assigns Appdata ownership to `1000:1000`; no privileged container is needed. The image uses `USER_UID`/`USER_GID`, not `PUID`/`PGID`.

@@ -43,3 +43,9 @@ The first browser check exposed a gap in the HTTP smoke test: a successful HTML 
 The template now opens `/auth` directly. On September 25, 2026, Playwright Chromium and WebKit 26.5 rendered that sign-in page successfully over a LAN HTTP connection. WebKit with an iPhone 13 viewport also switched to the registration form with no JavaScript page errors; the resulting screenshot was inspected. This is browser-engine emulation, not a test on a physical iPhone. No production account was created during the browser check.
 
 The installed Unraid template and container WebUI label were updated together. The image, environment, storage, port mappings and native Autostart entry were preserved. The public URL remains the origin without `/auth`. These checks cover entry into the authentication UI; the existing API smoke test separately covers signup, the first-admin claim and persistence.
+
+## Codex subscription sign-in
+
+An operator's successful device login from the root container console created private root-owned files in Paperclip's isolated sign-in directory. The application user (`1000:1000`) could not read `auth.json`, and cancellation/retry requests failed with `EACCES`. Changing ownership only within the affected sign-in directory, while preserving permission modes and file contents, restored access. Both `codex login status` and Paperclip's own `readVerifiedLocalAiCredential("openai", ...)` check then passed as the application user. The latter includes the upstream account/quota check; no agent task was run for this verification.
+
+The README now requires running the generated sign-in command as `1000:1000` and retaining its attempt-specific `CODEX_HOME`. This is an operator workflow requirement; the template does not change the default user of Docker Manager's console.
