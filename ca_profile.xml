@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CommunityApplications>
+  <Profile>Community-maintained Unraid template for Paperclip using the official upstream container image. Maintained by agrestisdavid. Installation documentation and template support are available in the unraid-paperclip GitHub repository. This repository is independent of Paperclip AI and Lime Technology.</Profile>
+  <Icon>https://raw.githubusercontent.com/agrestisdavid/unraid-paperclip/main/assets/paperclip.svg</Icon>
+  <WebPage>https://github.com/agrestisdavid/unraid-paperclip</WebPage>
+  <Forum>https://github.com/agrestisdavid/unraid-paperclip/issues</Forum>
+</CommunityApplications>

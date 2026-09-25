@@ -1,0 +1,28 @@
+name: Template problem
+description: Report an installation or configuration problem with the Unraid template.
+body:
+  - type: input
+    id: unraid
+    attributes:
+      label: Unraid version
+    validations:
+      required: true
+  - type: input
+    id: image
+    attributes:
+      label: Paperclip image tag or digest
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: What happened?
+      description: Include reproduction steps and expected behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted logs and settings
+      description: Remove secrets, API keys, session cookies and invite or claim links.
+      render: text

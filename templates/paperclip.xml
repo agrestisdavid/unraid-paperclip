@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Container version="2">
+  <Name>Paperclip-Upstream</Name>
+  <Repository>ghcr.io/paperclipai/paperclip:latest</Repository>
+  <Registry>https://github.com/paperclipai/paperclip/pkgs/container/paperclip</Registry>
+  <Network>bridge</Network>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/agrestisdavid/unraid-paperclip/issues</Support>
+  <Project>https://github.com/paperclipai/paperclip</Project>
+  <ReadMe>https://github.com/agrestisdavid/unraid-paperclip#readme</ReadMe>
+  <Overview>Manage teams of AI agents, tasks, approvals, schedules and budgets with Paperclip. This community-maintained Unraid template runs the official upstream image with embedded PostgreSQL and persistent storage.&#13;&#13;Before starting, set Public URL to the actual browser address and generate two separate secrets using openssl rand -hex 32. Open the WebUI, create your account and claim the first administrator. No external database or model API key is required to start the dashboard. Configure agent credentials separately after setup.&#13;&#13;Intended for a trusted private network. Remote Hermes agents connect through the Hermes Gateway adapter. Enable Autostart in the Unraid Docker tab after completing setup. See the README for installation, backups and upgrades.</Overview>
+  <Category>AI: Productivity: Tools:Utilities</Category>
+  <WebUI>http://[IP]:[PORT:3100]</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/agrestisdavid/unraid-paperclip/main/templates/paperclip.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/agrestisdavid/unraid-paperclip/main/assets/paperclip.svg</Icon>
+  <ExtraParams>--pids-limit=2048 --stop-timeout=60</ExtraParams>
+  <ExtraSearchTerms>agents orchestration hermes tasks automation</ExtraSearchTerms>
+  <License>https://github.com/paperclipai/paperclip/blob/master/LICENSE</License>
+  <Config Name="WebUI port" Target="3100" Default="3100" Mode="tcp" Description="Host port for the dashboard. If changed, update Public URL to match. Keep the container port at 3100." Type="Port" Display="always" Required="true" Mask="false">3100</Config>
+  <Config Name="Appdata" Target="/paperclip" Default="/mnt/user/appdata/paperclip" Mode="rw" Description="Persistent database, uploads, workspaces, configuration and encryption key. Use a dedicated directory on local storage, preferably an SSD pool. Back up the entire directory." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/paperclip</Config>
+  <Config Name="Public URL" Target="PAPERCLIP_PUBLIC_URL" Default="" Mode="" Description="Required: the exact URL used in your browser, including scheme and host port. For example http://tower:3100 or https://paperclip.example.com. Do not enter [IP] or [PORT] placeholders here." Type="Variable" Display="always" Required="true" Mask="false" />
+  <Config Name="Authentication secret" Target="BETTER_AUTH_SECRET" Default="" Mode="" Description="Required: generate a unique value with openssl rand -hex 32. Keep it unchanged across restarts and include it in your private backup." Type="Variable" Display="always" Required="true" Mask="true" />
+  <Config Name="Tool action signing secret" Target="PAPERCLIP_TOOL_ACTION_SIGNING_SECRET" Default="" Mode="" Description="Required: run openssl rand -hex 32 again for a separate signing secret. Keep it unchanged across restarts and include it in your private backup." Type="Variable" Display="always" Required="true" Mask="true" />
+  <Config Name="User ID" Target="USER_UID" Default="99" Mode="" Description="Runtime user ID. Unraid nobody is 99. The upstream entrypoint adjusts ownership of Appdata, then runs the application without root." Type="Variable" Display="advanced" Required="true" Mask="false">99</Config>
+  <Config Name="Group ID" Target="USER_GID" Default="100" Mode="" Description="Runtime group ID. Unraid users is 100. Use USER_GID rather than PGID for this upstream image." Type="Variable" Display="advanced" Required="true" Mask="false">100</Config>
+  <Config Name="Additional hostnames" Target="PAPERCLIP_ALLOWED_HOSTNAMES" Default="" Mode="" Description="Optional comma-separated hostnames beyond the Public URL host. Enter hostnames only, without scheme, port or wildcard." Type="Variable" Display="advanced" Required="false" Mask="false" />
+  <Config Name="Listen address" Target="HOST" Default="0.0.0.0" Mode="" Description="Container listen address. Leave at 0.0.0.0 for Docker bridge networking." Type="Variable" Display="advanced" Required="true" Mask="false">0.0.0.0</Config>
+  <Config Name="Container port" Target="PORT" Default="3100" Mode="" Description="Internal application port. Keep at 3100; change the host-side WebUI port instead." Type="Variable" Display="advanced" Required="true" Mask="false">3100</Config>
+  <Config Name="Data directory" Target="PAPERCLIP_HOME" Default="/paperclip" Mode="" Description="Internal persistent data directory. Keep aligned with the Appdata container path." Type="Variable" Display="advanced" Required="true" Mask="false">/paperclip</Config>
+  <Config Name="Deployment mode" Target="PAPERCLIP_DEPLOYMENT_MODE" Default="authenticated" Mode="" Description="Require user login. Keep authenticated for network access." Type="Variable" Display="advanced" Required="true" Mask="false">authenticated</Config>
+  <Config Name="Deployment exposure" Target="PAPERCLIP_DEPLOYMENT_EXPOSURE" Default="private" Mode="" Description="Private network deployment with embedded PostgreSQL. Public mode requires a different deployment architecture; see upstream documentation." Type="Variable" Display="advanced" Required="true" Mask="false">private</Config>
+</Container>
