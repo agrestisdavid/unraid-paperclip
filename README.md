@@ -42,6 +42,8 @@ The template uses bridge networking and publishes only port `3100/tcp`. Embedded
 
 For a private HTTPS reverse proxy, set Public URL to the HTTPS address and configure the proxy for WebSockets and long-lived event streams. The Unraid WebUI link defaults to the direct HTTP address; edit that field if you use only the proxy. The `private` setting is an application mode, not a firewall. Internet-facing deployments require the separate [upstream public deployment configuration](https://docs.paperclip.ing/reference/deploy/deployment-modes/), including an external database.
 
+**Use HTTPS for normal browser use.** The tested upstream release calls `crypto.randomUUID()` when sending task messages, but browsers do not provide that method on a plain HTTP LAN origin. The sign-in page can work while sending a message silently fails. A temporary, version-checked workaround is documented below; direct HTTP is not yet a fully validated CA deployment path.
+
 ## Connect Hermes on another computer
 
 Use Paperclip's built-in **Hermes Gateway** (`hermes_gateway`) adapter. Enable a Hermes API server for the intended profile, make it reachable from the Paperclip container, and store its `API_SERVER_KEY` in Paperclip's secret storage. Prefer HTTPS for a remote endpoint; remote plain HTTP is blocked by the adapter by default.
@@ -79,6 +81,7 @@ Before an upgrade:
 
 - **Startup fails:** inspect the container log, confirm the two secrets and Public URL are set, and check Appdata permissions and free space. Initial database setup takes longer than later starts.
 - **WebUI stays on Loading:** open `/auth` directly, for example `http://tower:3100/auth`. In the tested upstream release, the root route waits for retries of settings requests rejected before login, delaying the setup screen. The template's WebUI link bypasses that initial route. For an existing installation, edit its WebUI field to `http://[IP]:[PORT:3100]/auth` in Advanced View and apply; downloading the updated public template does not change an existing container. Initial asset downloads may also take longer on a slow connection.
+- **Send does nothing over LAN HTTP:** use HTTPS. For the tested upstream revision only, run `python3 scripts/http_uuid_compat.py` from a checkout of this repository on the Docker host, then reload the page. This adds a UUID fallback using the browser's cryptographic random generator before the application starts, saves the original HTML in Appdata, and does not restart the container. Restore with `python3 scripts/http_uuid_compat.py --restore`. The workaround survives an ordinary restart, but container recreation or an image update removes it. It only addresses UUID generation; it does not add HTTPS or implement other secure-context browser APIs.
 - **Login redirects or origin errors:** check the browser URL against Public URL; update it when changing the host port or proxy address.
 - **Permission errors:** keep `USER_UID=1000` and `USER_GID=1000`, and ensure the chosen Appdata path is writable. Do not add `--user` to bypass the upstream entrypoint's permission setup.
 - **First administrator already claimed:** sign in using the account that claimed the installation. Do not delete Appdata to repair an account problem.

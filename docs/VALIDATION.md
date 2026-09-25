@@ -49,3 +49,11 @@ The installed Unraid template and container WebUI label were updated together. T
 An operator's successful device login from the root container console created private root-owned files in Paperclip's isolated sign-in directory. The application user (`1000:1000`) could not read `auth.json`, and cancellation/retry requests failed with `EACCES`. Changing ownership only within the affected sign-in directory, while preserving permission modes and file contents, restored access. Both `codex login status` and Paperclip's own `readVerifiedLocalAiCredential("openai", ...)` check then passed as the application user. The latter includes the upstream account/quota check; no agent task was run for this verification.
 
 The README now requires running the generated sign-in command as `1000:1000` and retaining its attempt-specific `CODEX_HOME`. This is an operator workflow requirement; the template does not change the default user of Docker Manager's console.
+
+## Sending messages over LAN HTTP
+
+The installed task composer calls `crypto.randomUUID()` before invoking its send callback. Chromium and WebKit both reported that method as unavailable on the LAN HTTP origin. The upstream catch handler restores the draft without displaying this error, matching a send button that appears to do nothing.
+
+The optional `http_uuid_compat.py` workaround adds a feature-detected UUID v4 implementation using `crypto.getRandomValues()` to the HTML before the application module. It checks the exact image source revision, backs up the original HTML in Appdata, and supports restoration. It modifies only the running container's HTML; it is removed on recreation or update. HTTPS remains the durable deployment option.
+
+Verification covered UUID version/variant bits, 1,000 unique generated IDs, preservation of an existing native implementation, and Chromium/WebKit execution from the actual HTTP page. Both browsers successfully generated request IDs and reached a locally intercepted test request without JavaScript errors. This did not submit a production chat message or trigger an agent; completion of the user's actual onboarding conversation remains an interactive check. Other secure-context APIs, including `crypto.subtle`, are outside this workaround.

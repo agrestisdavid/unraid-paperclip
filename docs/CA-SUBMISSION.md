@@ -20,6 +20,7 @@ This submission uses the upstream Paperclip AI image and its embedded database, 
 ## Before submission
 
 - [x] GitHub Actions validation and container smoke test passed; see the validation record.
+- [ ] Resolve and verify the browser secure-context requirement before submission: the tested upstream version cannot send task messages over plain LAN HTTP without the temporary UUID workaround. Validate a documented HTTPS setup or an upstream fix; do not treat the HTML/API smoke test as evidence of a complete browser workflow.
 - [ ] Complete the Unraid acceptance test below and record the version/results in `docs/VALIDATION.md`.
 - [x] Public raw TemplateURL and icon URLs are reachable without signing in.
 - [ ] Confirm that GitHub Issues is the support channel you will maintain. A forum announcement draft is provided separately if you prefer forum support; update the XML links only after that thread exists.
